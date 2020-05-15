@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Teacher Home</title>
+
+       <link rel="stylesheet" href="{{  url_for("static",filename="css/bootstrap.min.css")}}">
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+	<script src="{{  url_for("static",filename="js/jquery.min.js")}}"></script>
+	<script src="{{  url_for("static",filename="js/bootstrap.min.js")}}"></script>
+  </head>
+  <body >
+    <!-- step 2-2 after nav -->
+	<header>      
+    <nav class="navbar navbar-default" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+					<img src="{{  url_for("static",filename="photo/LOGO.png")}}"  alt="logo of our education" height="50" width="150" />
+			</div>
+			
+			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          
+				<ul class="nav navbar-nav navbar-right">
+					<li class="dropdown">
+					  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{ userinfo.name }}<span class="caret"></span></a>
+					  <ul class="dropdown-menu">
+						<li><a href="/teacher/person">Personal Details</a></li>
+						<li><a href="teacher-salary.html">Salary</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="teacher-set.html">Setup</a></li>
+					  </ul>
+					</li>
+					<li><a href="/logout">Sign out</a></li>
+				  </ul>
+			</div>
+        </div>
+    </nav>
+    </header>
+    {% for foo in courselst %}
+        	<div class="container-fluid" >
+
+		<div class="row">
+
+			<div class="col-xs-2">
+
+			</div>
+				<div class="col-xs-8">
+					<div class="container-fluid">
+						<div class="col-xs-12">
+							<div class="panel panel-primary center-block" >
+								<div class="panel-heading" >
+									<h3 class="panel-title">
+									{{ foo.name }}
+									</h3>
+								</div>
+								<div class="panel-body">
+									<ul>
+										<li>
+                                            <a href="/teacher/stu/list?id={{ foo.id }}">学生信息</a>
+
+										</li>
+										<li>
+										          <a href="/teacher/stu/attend?id={{ foo.id }}">学生签到</a>
+
+										</li>
+										<li>
+										通知
+										</li>
+										<li>
+										上传文件
+										</li>
+
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col-xs-2">
+
+			</div>
+
+		</div>
+	</div>
+
+
+    {% endfor %}
+
+	
+
+
+		
+	
+
+
+
+
+
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="js/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
