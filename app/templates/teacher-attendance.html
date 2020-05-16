@@ -40,10 +40,10 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="home.html">Home <span class="sr-only">(current)</span></a></li>
-					<li><a href="login_interface.html">Logout</a></li>
+					<li><a href="/logout">Logout</a></li>
 				</ul>
 				<form class="navbar-form navbar-right">
-					<img src="photo/LOGO.png"  alt="logo of our education" height="50" width="150" />
+					<img src="{{  url_for("static",filename="photo/LOGO.png")}}"  alt="logo of our education" height="50" width="150" />
 				</form>	  
 			</div>
 		</div>
@@ -54,170 +54,85 @@
 		<div class="row">
 				<div class="col-xs-12">
 					<div class="container-fluid">
-						<div class="col-xs-12">
+
+                        {% for foo in resulst %}
+                            						<div class="col-xs-12">
 							<div class="panel panel-default">
 								<div class="panel-heading">
-									<h4>语文</h4>
+									<h4>{{ foo.course }}</h4>
 									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        
+
 									</ul>
 								</div>
 								<div class="panel-body">
-										<table class="table table-bordered table-striped table-hover"> 
-								<colgroup> 
-								<col class="col-xs-2" /> 
-								<col class="col-xs-4" /> 
-								<col class="col-xs-4" /> 
-								<col class="col-xs-2" /> 
-								
-								</colgroup> 
-            <thead> 
-              <tr> 
-                <th>ID</th>
-                <th>用户名</th>
-                <th>日期</th>
-                <th>签到</th>
-              </tr> 
-            </thead> 
-            <tbody> 
-              <tr>
-                <td>1</td>
-                <td>John Clark</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span>                        <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
 
-              <tr>
-                <td>2</td>
-                <td>风清扬</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-               
-              </tr>
-
-              <tr>
-                <td>3</td>
-                <td>詹姆斯</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span>  <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-              <tr>
-                <td>4</td>
-                <td>云适配</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-              <tr>
-                <td>5</td>
-                <td>呵呵呵</td>
-                <td>2020-02-02</td>
-               
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-             
-
-
-            </tbody> 
-          </table>
-								</div>
-								</div>
-								
-							</div>	
-							
-							<div class="col-xs-12">
-							
-						</div>
-						<div class="col-xs-12">
-							<div class="panel panel-default">
+                                    {% for foo2 in foo.detail %}
+                                        <div class="panel panel-default">
 								<div class="panel-heading">
-									<h4>数学</h4>
+									<h4>{{ foo2.chapter }}</h4>
 									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-        
+
 									</ul>
 								</div>
 								<div class="panel-body">
-										<table class="table table-bordered table-striped table-hover"> 
-								<colgroup> 
-								<col class="col-xs-2" /> 
-								<col class="col-xs-4" /> 
-								<col class="col-xs-4" /> 
-								<col class="col-xs-2" /> 
-								
-								</colgroup> 
-            <thead> 
-              <tr> 
+										<table class="table table-bordered table-striped table-hover">
+								<colgroup>
+								<col class="col-xs-2" />
+								<col class="col-xs-4" />
+								<col class="col-xs-4" />
+								<col class="col-xs-2" />
+
+								</colgroup>
+            <thead>
+              <tr>
                 <th>ID</th>
                 <th>用户名</th>
-                <th>日期</th>
                 <th>签到</th>
-              </tr> 
-            </thead> 
-            <tbody> 
-              <tr>
-                <td>1</td>
-                <td>John Clark</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span>                        <span class="glyphicon glyphicon-remove"> </span></td>
-                
+              </tr>
+            </thead>
+            <tbody>
+
+            　{% for foo3 in foo2.detail %}
+                              <tr>
+                <td>{{ foo3.1 }}</td>
+                <td>{{ foo3.2 }}</td>
+
+                <td>
+                    {% if foo3.0==1 %}
+                          <span class="glyphicon glyphicon-ok"> </span>
+                        {% else %}
+                        <span class="glyphicon glyphicon-remove"></span>
+
+                    {% endif %}
+
+                    </td>
+
               </tr>
 
-              <tr>
-                <td>2</td>
-                <td>风清扬</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-               
-              </tr>
 
-              <tr>
-                <td>3</td>
-                <td>詹姆斯</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span>  <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-              <tr>
-                <td>4</td>
-                <td>云适配</td>
-                <td>2020-02-02</td>
-                
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-              <tr>
-                <td>5</td>
-                <td>呵呵呵</td>
-                <td>2020-02-02</td>
-               
-                <td><span class="glyphicon glyphicon-ok"> </span> <span class="glyphicon glyphicon-remove"> </span></td>
-                
-              </tr>
-
-             
+            {% endfor %}
 
 
-            </tbody> 
+
+
+
+            </tbody>
           </table>
 								</div>
 								</div>
-								
-							</div>	
+
+                                    {% endfor %}
+
+								</div>
+								</div>
+
+							</div>
+
+
+                        {% endfor %}
+
+
+
 							
 							
 							

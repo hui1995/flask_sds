@@ -51,7 +51,22 @@
     </header>
 
 	<div class="container-fluid" >
+
+    <div class="alert alert-warning">
+    <a href="#" class="close" data-dismiss="alert">
+        &times;
+    </a>
+    <strong>警告！</strong>{{ message }}
+</div>
 	<div class="panel panel-default">
+
+
+								<div class="panel-heading">
+									<h4>{{ courseInfo.0 }}(第{{ courseInfo.1 }}章节)</h4>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+
+									</ul>
+								</div>
 
 								<div class="panel-body">
 										<table class="table table-bordered table-striped table-hover">
@@ -64,6 +79,8 @@
 								</colgroup>
             <thead>
               <tr>
+                                  <th>ID</th>
+
                 <th>用户名</th>
                 <th>签到</th>
               </tr>
@@ -72,9 +89,20 @@
 
                   {% for foo in result %}
                           <tr>
-                          <td>{{ foo.name }}</td>
-                       <td><span class="glyphicon glyphicon-ok"> </span>                        <span class="glyphicon glyphicon-remove"> </span></td>
+                          <td>{{ foo.0 }}</td>
+                          <td>{{ foo.1 }}</td>
+                       <td>
+                           {% if foo.5 ==None %}
+                               <a href="/teacher/check/attend?courseId={{ id }}&studentId={{ foo.0 }}&is_attend=1"><span class="glyphicon glyphicon-ok"> </span> </a>
+                               <a href="/teacher/check/attend?courseId={{ id }}&studentId={{ foo.0 }}&is_attend=0"><span class="glyphicon glyphicon-remove"> </span></a>
 
+                               {% elif foo.5==1 %}
+                               已到
+                               {% else %}
+                           未到
+                           {% endif %}
+                           
+</td>
 
 
               </tr>
@@ -88,6 +116,10 @@
 
             </tbody>
           </table>
+
+
+                                    <a href="/teacher/check/end?courseId={{ id }}"> <button type="button" class="btn btn-primary">Submit</button></a>
+
 								</div>
 								</div>
 				</div>

@@ -59,24 +59,24 @@
 			<div class="col-xs-2">
 				<nav class="sidebar sidebar-offcanvas" id="sidebar">
 					<ul class="nav">
-						<li class="nav-item">
-							<a class="nav-link" href="home.html">
+				<li class="nav-item">
+							<a class="nav-link" href="/admin/index">
 								<span class="glyphicon glyphicon-home" style="color:black">&ensp;Home</span>
 							</a>
 						</li>
-						
+
 						<li class="nav-item">
-							<a class="nav-link" href="student1.html">
+							<a class="nav-link" href="/admin/student">
 								<span class="glyphicon glyphicon-edit" style="color:black">&ensp;Student</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="teacher1.html">
+							<a class="nav-link" href="/admin/teacher">
 								<span class="glyphicon glyphicon-edit" style="color:black">&ensp;Teacher</span>
 							</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="courses1.html">
+							<a class="nav-link" href="/admin/course">
 								<span class="glyphicon glyphicon-edit" style="color:black">&ensp;Courses</span>
 							</a>
 						</li>
@@ -92,81 +92,78 @@
 						<br>
 						</div>
 						<div class="col-xs-12" >
-							<div class="table-responsive" style="margin-left: 15px;"> 
-								<table class="table table-bordered table-striped table-hover"> 
-								<colgroup> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-									<col class="col-xs-1" /> 
-								</colgroup> 
-								<thead> 
-								  <tr> 
+							<div class="table-responsive" style="margin-left: 15px;">
+                                <form class="bs-example bs-example-form" role="form" method="get">
+        <div class="row">
+
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <input type="text" class="form-control" name="teacherId">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="submit">Search!</button>
+                    </span>
+                </div><!-- /input-group -->
+            </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+    </form>
+
+
+
+                                {% if teacherlst %}
+
+                                        <a type="button" class="btn btn-default" href="/admin/teacher/add?teacherId={{ teacher_id }}">添加课程</a>
+    <a type="button" class="btn btn-default" href="/admin/teacher/edit?teacherId={{ teacher_id }}">编辑教师信息</a>
+                                    								<table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
+								<colgroup>
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+									<col class="col-xs-1" />
+								</colgroup>
+								<thead>
+								  <tr>
 									<th>Name</th>
 									<th>ID</th>
+									<th>AGE</th>
 									<th>Salary</th>
-									<th>Course1</th>
-									<th>Course2</th>
-									<th>Course3</th>
+									<th>Course</th>
+
 									<th>Operation</th>
-								  </tr> 
-								</thead> 
-								<tbody> 
-								  <tr>
-									<td>Van</td>
-									<td>1830026016</td>
-									<td>666</td>
-									<td>DBMS</td>
-									<td>LMC</td>
-									<td>OP</td>
-									<td><button class="btn" style="width:70px"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button></td>                
+								  </tr>
+								</thead>
+								<tbody>
+
+                                {% for foo in teacherlst %}
+                                    								  <tr>
+									<td>{{ foo.0 }}</td>
+									<td>{{ foo.1 }}</td>
+									<td>{{ foo.2 }}</td>
+									<td><a href="/admin/salary?teacherId={{ teacher_id }}">{{ foo.3 }}</a></td>
+									<td>
+                                        {% if foo.4 %}
+                                         {{ foo.4 }}
+                                        {% endif %}
+                                       </td>
+
+									<td>
+                                              {% if foo.4 %}
+                                        <a class="btn" style="width:70px" href="/admin/teacher/delete?id={{ foo.5 }}&teacherId={{ teacher_id }}">删除</a>
+
+                                    {% endif %}</td>
 								  </tr>
 
-								  <tr>
-									<td>Van</td>
-									<td>1830026016</td>
-									<td>666</td>
-									<td>DBMS</td>
-									<td>LMC</td>
-									<td>OP</td>
-									<td><button class="btn" style="width:70px"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button></td>               
-								  </tr>
 
-								  <tr>
-									<td>Van</td>
-									<td>1830026016</td>
-									<td>666</td>
-									<td>DBMS</td>
-									<td>LMC</td>
-									<td>OP</td>
-									<td><button class="btn" style="width:70px"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button></td>                
-								  </tr>
+                                {% endfor %}
 
-								  <tr>
-									<td>Van</td>
-									<td>1830026016</td>
-									<td>666</td>
-									<td>DBMS</td>
-									<td>LMC</td>
-									<td>OP</td>
-									<td><button class="btn" style="width:70px"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button></td>
-									
-								  </tr>
+								</tbody>
+							  </table>
 
-								  <tr>
-									<td>Van</td>
-									<td>1830026016</td>
-									<td>666</td>
-									<td>DBMS</td>
-									<td>LMC</td>
-									<td>OP</td>
-									<td><button class="btn" style="width:70px"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></button></td>                
-								  </tr>
-								</tbody> 
-							  </table> 
+
+                                {% endif %}
+
 							</div>
 						</div>
 					</div>

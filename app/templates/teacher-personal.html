@@ -67,16 +67,21 @@
 								<div class="panel-body">
 									<ol>
 										<li>
-										Name:	{{ teacher.name }}
+										Name:	{{ teacher.1 }}
 										</li>
 										<li>
-										Gender:	{{ teacher.gender }}
+										Gender:
+                                            {% if teacher.2==1 %}
+                                                M
+                                                {% else %}
+                                            F
+                                            {% endif %}
 										</li>
 										<li>
-										Age:	{{ teacher.age }}
+										Age:	{{ teacher.3 }}
 										</li>
 										<li>
-										Graduation school: {{ teacher.graduation_school }}
+										Graduation school: {{ teacher.4 }}
 										</li>
 
 									</ol>

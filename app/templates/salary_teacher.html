@@ -6,8 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Bootstrap  Template</title>
-
-        <link rel="stylesheet" href="{{  url_for("static",filename="css/bootstrap.min.css")}}">
+       <link rel="stylesheet" href="{{  url_for("static",filename="css/bootstrap.min.css")}}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,36 +18,39 @@
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="{{  url_for("static",filename="js/jquery.min.js")}}"></script>
 	<script src="{{  url_for("static",filename="js/bootstrap.min.js")}}"></script>
-
-    
   </head>
   <body >
     <!-- step 2-2 after nav -->
-	<header>
-	<nav class="navbar navbar-default">
+	<header>      
+    <nav class="navbar navbar-default" role="navigation">
 		<div class="container-fluid">
-			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
-			  <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-				<span class="sr-only">Toggle navigation</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			  </button>
-			  <a class="navbar-brand" href="#">TrumpEducation</a>
+				<a class="navbar-brand">Trump Education Management</a>
 			</div>
-
-			<!-- Collect the nav links, forms, and other content for toggling -->
+			
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-				<ul class="nav navbar-nav">
-					<li><a href="home.html">Home <span class="sr-only">(current)</span></a></li>
-					<li><a href="/logout">Logout</a></li>
-				</ul>
-				<form class="navbar-form navbar-right">
-					<img src="{{  url_for("static",filename="photo/LOGO.png")}}"  alt="logo of our education" height="50" width="150" />
-				</form>	  
+          
+				<div class="navbar-form navbar-right" >
+			  
+					<span class="glyphicon glyphicon-envelope"></span>Noticebox&ensp;<span class="label label-warning">5</span>
+				
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >			
+				
+					<span class="glyphicon glyphicon-user" style="color:black">Account</span><span class="caret" style="color:black"></span>
+				
+					</a>
+					<ul class="dropdown-menu" style="min-width: 40px">
+					<li>
+						<a href="#"><span class="glyphicon glyphicon-log-out"></span>Quit</a>
+					</li>
+					<li>
+						<a href="#"><span class="glyphicon glyphicon-cog"></span>Settings</a>
+					</li>
+                
+					</ul>
+				</div>
 			</div>
-		</div>
+        </div>
     </nav>
     </header> 
 	
@@ -57,7 +59,7 @@
 			<div class="col-xs-2">
 				<nav class="sidebar sidebar-offcanvas" id="sidebar">
 					<ul class="nav">
-					<li class="nav-item">
+				<li class="nav-item">
 							<a class="nav-link" href="/admin/index">
 								<span class="glyphicon glyphicon-home" style="color:black">&ensp;Home</span>
 							</a>
@@ -84,7 +86,7 @@
 				<div class="col-xs-10">
 					<div class="container-fluid">
 						</div>
-							<h1 style="text-align:center">Course Management System</h1>
+							<h1 style="text-align:center">Teacher Management System</h1>
 							<hr />
 						<div class="col-xs-12">
 						<br>
@@ -93,27 +95,12 @@
 							<div class="table-responsive" style="margin-left: 15px;">
 
 
-                                                           <form class="bs-example bs-example-form" action="/admin/course" role="form" method="get">
-        <div class="row">
-
-            <div class="col-lg-6">
-                <div class="input-group">
-                    <input type="text" class="form-control" name="courseId">
-                    <span class="input-group-btn">
-                        <button class="btn btn-default" type="submit">Search!</button>
-                    </span>
-                </div><!-- /input-group -->
-            </div><!-- /.col-lg-6 -->
-        </div><!-- /.row -->
-    </form>
-                                            <a href="/admin/course/add" class="btn btn-primary float-right pull-right"> 创建课程</a>
 
 
-                                {% if courselst %}
 
-                                    								<table class="table table-bordered table-striped table-hover">
+
+                                    								<table class="table table-bordered table-striped table-hover" style="margin-top: 20px">
 								<colgroup>
-									<col class="col-xs-1" />
 									<col class="col-xs-1" />
 									<col class="col-xs-1" />
 									<col class="col-xs-1" />
@@ -124,39 +111,32 @@
 								</colgroup>
 								<thead>
 								  <tr>
-									<th>Course ID</th>
-									<th>Course Name</th>
-									<th>Student Name</th>
-									<th>Student ID</th>
-									<th>Score</th>
-									<th>GPA</th>
+									<th>时间</th>
+									<th>明细</th>
+									<th>余额</th>
 
-									<th>Operation</th>
+
 								  </tr>
 								</thead>
 								<tbody>
-                                {% for foo in courselst %}
 
+                                {% for foo in rows %}
                                     								  <tr>
-									<td>{{ foo.0 }}</td>
-									<td>{{ foo.1 }}</td>
 									<td>{{ foo.2 }}</td>
 									<td>{{ foo.3 }}</td>
 									<td>{{ foo.4 }}</td>
-									<td>{{ foo.5 }}</td>
 
-									<td><a class="btn" style="width:70px" href="/admin/course/edit?courseId={{ foo.0 }}&studentId={{ foo.3 }}"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a></td>
+
+
 								  </tr>
 
 
                                 {% endfor %}
 
-
 								</tbody>
 							  </table>
 
 
-                                {% endif %}
 
 							</div>
 						</div>

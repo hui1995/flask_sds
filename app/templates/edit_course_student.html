@@ -7,7 +7,7 @@
     <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
     <title>Bootstrap  Template</title>
 
-       <link rel="stylesheet" href="{{  url_for("static",filename="css/bootstrap.min.css")}}">
+        <link rel="stylesheet" href="{{  url_for("static",filename="css/bootstrap.min.css")}}">
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
@@ -19,11 +19,13 @@
 	<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 	<script src="{{  url_for("static",filename="js/jquery.min.js")}}"></script>
 	<script src="{{  url_for("static",filename="js/bootstrap.min.js")}}"></script>
+
+    
   </head>
   <body >
     <!-- step 2-2 after nav -->
-	<header>      
-    <nav class="navbar navbar-default">
+	<header>
+	<nav class="navbar navbar-default">
 		<div class="container-fluid">
 			<!-- Brand and toggle get grouped for better mobile display -->
 			<div class="navbar-header">
@@ -40,10 +42,10 @@
 			<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 				<ul class="nav navbar-nav">
 					<li><a href="home.html">Home <span class="sr-only">(current)</span></a></li>
-					<li><a href="login_interface.html">Logout</a></li>
+					<li><a href="/logout">Logout</a></li>
 				</ul>
 				<form class="navbar-form navbar-right">
-					<img src="photo/LOGO.png"  alt="logo of our education" height="50" width="150" />
+					<img src="{{  url_for("static",filename="photo/LOGO.png")}}"  alt="logo of our education" height="50" width="150" />
 				</form>	  
 			</div>
 		</div>
@@ -51,56 +53,59 @@
     </header> 
 	
 	<div class="container-fluid" >
-	<div class="panel panel-default">
+        <div class="panel panel-default" style="width: 50%;margin: 0 auto;margin-top: 100px;">
+    <div class="panel-heading">
+        <h3 class="panel-title">
 
-								<div class="panel-body">
-										<table class="table table-bordered table-striped table-hover">
-								<colgroup>
-								<col class="col-xs-2" />
-								<col class="col-xs-4" />
-								<col class="col-xs-4" />
-								<col class="col-xs-2" />
+			<h1>Course Form</h1>
 
-								</colgroup>
-            <thead>
-              <tr>
-                                  <th>ID</th>
+        </h3>
+    </div>
+    <div class="panel-body">
+	<div class = "row">
+		<div class="mx-auto" >
+			<form style="width: 85%;margin: 0 auto" method="post">
 
-                <th>用户名</th>
-                <th>AGE</th>
-                <th>GENDER</th>
-              </tr>
-            </thead>
-            <tbody>
+                {% if message %}
+<div class="alert alert-warning">
+    <a href="#" class="close" data-dismiss="alert">
+        &times;
+    </a>
+    <strong>警告！</strong>{{ message }}
+</div>
+                {% endif %}
+			  <div class="form-group">
+				  <div class="form-group">
+				<label for="exampleInputEmail1">CourseId</label>
+				<input type="number" class="form-control" name="id" aria-describedby="emailHelp" value="{{ result.0 }}" readonly>
+			  </div>
+			  <div class="form-group">
+				<label for="exampleInputPassword1">Course Name</label>
+				<input type="text"  name="name" class="form-control" id="exampleInputPassword1" value="{{ result.1 }}">
+			  </div>
 
-                  {% for foo in result %}
-                          <tr>
-                          <td>{{ foo.0 }}</td>
-                          <td>{{ foo.1 }}</td>
-                <td>{{ foo.2 }}</td>
-                <td>{% if foo.3==1 %}
-
-
-                    男
-                    {% else %}
-                    女
-                {% endif %}</td>
-
-
-              </tr>
-
-                  {% endfor %}
-
-
+                    <div class="form-group">
+				<label for="exampleInputPassword1">GPA</label>
+				<input type="text"  name="GPA" class="form-control" id="exampleInputPassword1" value="{{ result.4 }}">
+			  </div>
+                         <div class="form-group">
+				<label for="exampleInputPassword1">Score</label>
+				<input type="text"  name="score" class="form-control" id="exampleInputPassword1" value="{{ result.5 }}">
+			  </div>
 
 
 
 
-            </tbody>
-          </table>
-								</div>
-								</div>
-				</div>
+
+
+
+			  <button type="submit" class="btn btn-primary">Submit</button>
+
+			</form>
+		</div>
+	</div>
+    </div>
+</div>
 	</div>
 		
 	

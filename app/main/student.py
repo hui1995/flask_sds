@@ -2,42 +2,72 @@
 
 from flask import render_template, request, session, redirect, Response
 # from . import main
-from .. import db
 from ..models import *
-from flask_login import login_required,current_user
+from flask_login import login_required, current_user
 from flask import Blueprint
-from app import db
-studentBlue = Blueprint('student',__name__)
+from ..DatabaseOperations import DatabaseOperations
 
-@studentBlue.route('/index',methods=['POST','GET'])
+studentBlue = Blueprint('student', __name__)
+
+
+# 学生主页面接口
+@studentBlue.route('/index', methods=['POST', 'GET'])
 @login_required
 def student_home():
     if request.method == 'GET':
-        student=Student.query.filter(Student.id==current_user.id).first()
+        # 创建一个sql链接，查询学生相关信息
+        databaseOperations = DatabaseOperations()
+        sql = 'select * from student where id=%s'
+        student = databaseOperations.select_one(sql, current_user.id)
+        #查询学生相关课程信息
+        sql = "select c.id as id,c.name as name from `stud_course` as s left join course as c on c.id=s.course_id where s.student_id=%s";
+        result = databaseOperations.select_many(sql, current_user.id)
+        return render_template('student_page.html', student=student, result=result)
 
-        sql = "select c.id as id,c.name as name from `stud_course` as s left join course as c on c.id=s.course_id where s.student_id='"+str(current_user.id)+"'";
-        result = db.session.execute(sql).fetchall()
 
 
-        return render_template('student_page.html',student=student,result=result)
-
-
-@studentBlue.route('/coruse',methods=['POST','GET'])
+#学生课程相关接口
+@studentBlue.route('/coruse', methods=['POST', 'GET'])
 @login_required
 def student_course():
     if request.method == 'GET':
-        id=request.args['id']
-        course=Course.query.filter(Course.id==id).first()
+        id = request.args['id']
+        #查询本课程的详细信息
+        databaseOperations = DatabaseOperations()
+        sql = 'select * from course where id=%s'
+        course = databaseOperations.select_one(sql, (id))
+
+        #查询这个课程的咨询
+        sql = """SELECT * from inform where class_id=%s"""
+        informationlst = databaseOperations.select_many(sql, (id))
+
+        return render_template('student_page_related_class.html', course=course,informationlst=informationlst)
 
 
-        return render_template('student_page_related_class.html',course=course)
 
-@studentBlue.route('/home',methods=['POST','GET'])
+
+#历史签到信息查询
+@studentBlue.route('/attend', methods=['POST', 'GET'])
 @login_required
-def home():
+def attend():
+
     if request.method == 'GET':
-        student=Student.query.filter(Student.id==current_user.id).first()
+        id =request.args['id']
 
+        #根据课程id查询当前章节的签到数据
+        sql="""SELECT
+	s.chapter AS chapter,
+	s.is_attendance as is_attendance
+	FROM
+	`attendance` AS s
+	LEFT JOIN stud_course AS c ON c.student_id=s.student_id
+WHERE
+	c.course_id =%s and c.student_id=%s"""
+        databaseOperations = DatabaseOperations()
+        attendList=databaseOperations.select_many(sql,(id,current_user.id))
 
-        return render_template('home.html',student=student)
+        #查询课程的信息
+        sql = 'select * from course where id=%s'
+        course = databaseOperations.select_one(sql, (id))
 
+        return render_template( 'student-course-attendance.html',result=attendList,course=course)

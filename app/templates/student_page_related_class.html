@@ -56,7 +56,10 @@
 						<h3 class="panel-title">The Newest information</h3>
 					</div>
 					<div class="panel-body">
-						Finish the assignment8
+						{% for foo in informationlst %}
+						<p>{{ foo.1 }}</p>
+						{% endfor %}
+
 						<br><br><br><br><br>
 					</div>
 				</div>
@@ -71,19 +74,19 @@
 					<div class="panel-body">
 						<ol>
 							<li>
-							Class name: {{ course.name }}
+							Class name: {{ course.1 }}
 							</li>
 							<li>
-							Teacher Name: {{ course.teacher_name }}
+							Teacher Name: {{ course.3 }}
 							</li>
 							<li>
-							The Newest Chapter: Chapter {{ course.the_newest_chapter }}
+							The Newest Chapter: Chapter {{ course.4 }}
 							</li>
 							<li>
-							<a href="#">The History Attendence</a>
+							<a href="/student/attend?id={{ course.0 }}">The History Attendence</a>
 							</li>
 							<li>
-							Rest of class:{{ course.rest_class }}
+							Rest of class:{{ course.5 }}
 							</li>	
 						</ol>					
 					</div>		

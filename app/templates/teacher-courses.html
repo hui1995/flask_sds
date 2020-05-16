@@ -61,25 +61,23 @@
 							<div class="panel panel-primary center-block" >
 								<div class="panel-heading" >
 									<h3 class="panel-title">
-									{{ foo.name }}
+									{{ foo.1 }}
 									</h3>
 								</div>
 								<div class="panel-body">
 									<ul>
 										<li>
-                                            <a href="/teacher/stu/list?id={{ foo.id }}">学生信息</a>
+                                            <a href="/teacher/stu/list?id={{ foo.0 }}">学生信息</a>
 
 										</li>
 										<li>
-										          <a href="/teacher/stu/attend?id={{ foo.id }}">学生签到</a>
+										          <a href="/teacher/stu/attend?id={{ foo.0 }}">学生签到</a>
 
 										</li>
 										<li>
-										通知
+                                            <a href="/teacher/add/inform?id={{ foo.0 }}">通知</a>
 										</li>
-										<li>
-										上传文件
-										</li>
+
 
 									</ul>
 								</div>
