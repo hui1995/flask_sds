@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 
-from DBUtils import PooledDB
 
 import pymysql
 pymysql.install_as_MySQLdb()

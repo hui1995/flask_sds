@@ -6,7 +6,7 @@ from app.DatabaseOperations import *
 
 from app.models import User
 from flask import session,request
-配置文件
+#配置文件
 def create_app():
     app = Flask(__name__)
     app.config['DEBUG'] = True

@@ -11,6 +11,7 @@ mainBlu = Blueprint('main',__name__)
 
 
 #登陆接口
+@mainBlu.route('/',methods=['POST','GET'])
 @mainBlu.route('/login',methods=['POST','GET'])
 def login_views():
     if request.method == 'GET':
