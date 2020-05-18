@@ -36,7 +36,7 @@ def teacher_course():
         databaseOperations = DatabaseOperations()
         sql = 'select * from course where teacher_id=%s'
         courselst = databaseOperations.select_many(sql, current_user.id)
-        return render_template('teacher-courses.html',userinfo=current_user,courselst=courselst)
+        return render_template('teacher-course.html', userinfo=current_user, courselst=courselst)
 
 
 #添加咨询页面
@@ -79,41 +79,36 @@ def teacher_course_student_list_attend():
         id =request.args['id']
         databaseOperations = DatabaseOperations()
 
-        #查询当前最新章节的签到情况
-        sql = """
-               select 
-s.id,
-s.name,
-
-s.age AS age,
-	s.gender AS gender ,
-	s.chapter+1 as chapter,
-	i.is_attendance as attendance
-FROM(
-
-
-SELECT
-	s.id AS id,
-	s.NAME AS NAME,
-	s.age AS age,
-	s.gender AS gender ,
-	course.the_newest_chapter as chapter
-FROM
-	`stud_course` AS c
-	LEFT JOIN student AS s ON c.student_id = s.id RIGHT JOIN course on course.id=c.course_id
-WHERE
-	c.course_id =%s) as s LEFT JOIN attendance  as i on (i.student_id)=s.id and i.chapter=s.chapter+1"""
-        result = databaseOperations.select_many(sql, (id))
-
-
         #查询下一节应该是多少节课
-        sql="select name,the_newest_chapter+1 from course where id=%s "
+
+
+        sql="select name,the_newest_chapter from course where id=%s "
         courseInfo = databaseOperations.select_one(sql, (id))
         #如果大于20，则标记为完成
-        if courseInfo>20:
+        if courseInfo[1]>20:
             return render_template('teacher-courses-current-attendance.html', message="该课程已经完结")
+        current_chapter=courseInfo[1]+1
 
-        return render_template('teacher-courses-current-attendance.html',userinfo=current_user,id=id,result=result,courseInfo=courseInfo)
+
+        #查询当前最新章节的签到情况
+        sql = """
+          select a.id,
+	a.NAME,
+	a.age AS age,
+	a.gender AS gender,
+	b.chapter + 1 AS chapter,
+	b.is_attendance AS attendance  FROM
+(select  student.id as id,student.name as name,student.age as age,student.gender as  gender FROM student LEFT JOIN stud_course ON stud_course.student_id=student.id WHERE course_id=%s) as a LEFT JOIN
+	
+	(select course_id,is_attendance,chapter, student_id as stuId FROM attendance WHERE course_id=%s AND chapter=%s) as b on a.id=b.stuId"""
+        result = databaseOperations.select_many(sql, (id,id,current_chapter))
+
+
+
+
+
+
+        return render_template('teacher-courses-current-attendance.html',userinfo=current_user,id=id,result=result,courseInfo=courseInfo,current_chapter=current_chapter)
 #标记学生的出席情况
 @login_required
 @teacherBlu.route('/check/attend',methods=['POST','GET'])
@@ -139,7 +134,7 @@ def attend_check_end():
         id =request.args['courseId']
         #签到完毕，课程的学习进度加一
         sql="""update
- course SET the_newest_chapter=the_newest_chapter+1,rest_class-1
+ course SET the_newest_chapter=the_newest_chapter+1,rest_class=rest_class-1
  WHERE id=%s"""
         databaseOperations = DatabaseOperations()
 
@@ -159,7 +154,7 @@ def attend_check_end():
         sql="insert into salary(teacher_id,date,income_outcome,rest) values(%s,%s,%s,%s)"
         databaseOperations.insert_one(sql,(current_user.id[0],date.today(),50,row[1]+50))
 
-        return redirect("/teacher/stu/attend?id="+str(id))
+        return redirect("/teacher/course")
 
 #历史出席记录
 @login_required

@@ -108,6 +108,7 @@
     </form>
                                             <a href="/admin/course/add" class="btn btn-primary float-right pull-right"> 创建课程</a>
 
+                                            <a href="/admin/course/delete?id={{ course_id }}" class="btn btn-primary float-right pull-right"> 删除课程</a>
 
                                 {% if courselst %}
 
@@ -145,7 +146,11 @@
 									<td>{{ foo.4 }}</td>
 									<td>{{ foo.5 }}</td>
 
-									<td><a class="btn" style="width:70px" href="/admin/course/edit?courseId={{ foo.0 }}&studentId={{ foo.3 }}"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a></td>
+									<td>
+                                        {% if foo.3 %}
+                                                                                <a class="btn" style="width:70px" href="/admin/course/edit?courseId={{ foo.0 }}&studentId={{ foo.3 }}"><span class="glyphicon glyphicon-cog"></span><span class="caret"></span></a>
+                                        {% endif %}
+</td>
 								  </tr>
 
 

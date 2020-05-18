@@ -34,7 +34,25 @@ def admin_course():
         sql=" SELECT c.id,c.`name`,st.`name`,st.id,ifnull(s.score,''),ifnull(s.GPA,'') FROM stud_course as s LEFT JOIN course as c ON s.course_id=c.id LEFT JOIN student as st ON s.student_id=st.id WHERE c.id=%s"
         courselst=databaseOperation.select_many(sql,(courseId))
 
-        return render_template('admin_course.html',courselst=courselst)
+        if len(courselst) ==0:
+            sql="SELECT c.id, c.`name` FROM course AS c  WHERE c.id =%s"
+            courselst = databaseOperation.select_many(sql, (courseId))
+
+        return render_template('admin_course.html',courselst=courselst,course_id=courseId)
+
+
+@adminBlue.route("/course/delete",methods=["GET"])
+def admin_course_delete():
+    if request.method == 'GET':
+        id = request.args.get("id")
+        teacherId = request.args.get("teacherId")
+        # 删除老师的某一个课程
+        databaseOperation = DatabaseOperations()
+        sql = 'delete from course where id=%s'
+        databaseOperation.delete(sql, (id))
+        sql = 'delete from stud_course where id=%s'
+        databaseOperation.delete(sql, (id))
+        return redirect("/admin/course")
 
 @adminBlue.route('/course/add',methods=['POST','GET'])
 @login_required
@@ -45,6 +63,9 @@ def admin_course_add():
     else:
         id=request.form.get("id")
         name=request.form.get("name")
+        week=request.form.get("week")
+        time=request.form.get("time")
+        week_time=week+time
         databaseOperation=DatabaseOperations()
  #查询添加的课程id是否存在
         sql ="select * from course where  id=%s"
@@ -53,10 +74,10 @@ def admin_course_add():
             return render_template('add_course.html',message="该课程ID已经存在")
 
         #插入课程信息
-        sql="insert into course(id,name) values (%s,%s)"
-        databaseOperation.insert_one(sql,(id,name))
+        sql="insert into course(id,name,time) values (%s,%s,%s)"
+        databaseOperation.insert_one(sql,(id,name,week_time))
 
-        return render_template('add_course.html',message="添加成功")
+        return redirect("/admin/course")
 
 @adminBlue.route('/course/edit',methods=['POST','GET'])
 @login_required
@@ -129,17 +150,17 @@ def admin_salary():
 
 @adminBlue.route('/teacher/delete',methods=['POST','GET'])
 @login_required
-def admin_teacheer_delete():
+def admin_teacher_delete():
     if request.method == 'GET':
         id=request.args.get("id")
         teacherId=request.args.get("teacherId")
         #删除老师的某一个课程
         databaseOperation=DatabaseOperations()
-        sql='delete from course where id=%s'
-        databaseOperation.delete(sql,(id))
         sql='delete from stud_course where course_id=%s'
         databaseOperation.delete(sql,(id))
-        return redirect("/admin/student?studentId="+teacherId)
+        sql='update course set teacher_id=%s ,teacher_name=%s where id=%s'
+        databaseOperation.update(sql,(None,None,id))
+        return redirect("/admin/teacher?teacherId="+teacherId)
 
 
 @adminBlue.route('/teacher/edit',methods=['POST','GET'])
@@ -151,7 +172,6 @@ def admin_teacher_edit():
         databaseOperation=DatabaseOperations()
         sql='select * from teacher where id=%s'
         rows=databaseOperation.select_one(sql,(teacher_id))
-        print(rows)
         return render_template('edit_teacher_info.html',row=rows)
     # 获取相关信息，并更新数据库
     password=request.form.get("password")
