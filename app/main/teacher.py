@@ -78,17 +78,20 @@ def teacher_course_student_list_attend():
     if request.method == 'GET':
         id =request.args['id']
         databaseOperations = DatabaseOperations()
+        message=request.args.get("message")
+        if message =="" and message is  None:
+            message=None
 
         #查询下一节应该是多少节课
 
 
-        sql="select name,the_newest_chapter from course where id=%s "
+        sql="select name,rest_class,the_newest_chapter from course where id=%s "
         courseInfo = databaseOperations.select_one(sql, (id))
-        #如果大于20，则标记为完成
-        if courseInfo[1]>20:
-            return render_template('teacher-courses-current-attendance.html', message="该课程已经完结")
-        current_chapter=courseInfo[1]+1
-
+        #如果小于0，则标记为完成
+        if courseInfo[1]<=0:
+            message="该课程已经完结"
+            return render_template('teacher-courses-current-attendance.html', message=message)
+        current_chapter=courseInfo[2]
 
         #查询当前最新章节的签到情况
         sql = """
@@ -96,7 +99,7 @@ def teacher_course_student_list_attend():
 	a.NAME,
 	a.age AS age,
 	a.gender AS gender,
-	b.chapter + 1 AS chapter,
+	b.chapter  AS chapter,
 	b.is_attendance AS attendance  FROM
 (select  student.id as id,student.name as name,student.age as age,student.gender as  gender FROM student LEFT JOIN stud_course ON stud_course.student_id=student.id WHERE course_id=%s) as a LEFT JOIN
 	
@@ -104,11 +107,7 @@ def teacher_course_student_list_attend():
         result = databaseOperations.select_many(sql, (id,id,current_chapter))
 
 
-
-
-
-
-        return render_template('teacher-courses-current-attendance.html',userinfo=current_user,id=id,result=result,courseInfo=courseInfo,current_chapter=current_chapter)
+        return render_template('teacher-courses-current-attendance.html',userinfo=current_user,id=id,result=result,courseInfo=courseInfo,current_chapter=current_chapter, message=message)
 #标记学生的出席情况
 @login_required
 @teacherBlu.route('/check/attend',methods=['POST','GET'])
@@ -123,7 +122,7 @@ def attend_check():
         row=databaseOperations.select_one(sql,(id))
         #将学生签到情况，加入数据库
         sql = "insert into attendance(course_id,student_id,is_attendance,chapter) values (%s,%s,%s,%s)"
-        databaseOperations.insert_one(sql, (id,student_id,isAttend,row[0]+1))
+        databaseOperations.insert_one(sql, (id,student_id,isAttend,row[0]))
         return redirect("/teacher/stu/attend?id="+str(id))
 #当前章节签到完毕，提交一下
 from datetime import date
@@ -132,6 +131,19 @@ from datetime import date
 def attend_check_end():
     if request.method == 'GET':
         id =request.args['courseId']
+        databaseOperations = DatabaseOperations()
+
+        #查询课程当前
+        sql="select the_newest_chapter from course where id=%s"
+        row=databaseOperations.select_one(sql,(id))
+        sql="select count(1) from stud_courrse where course_id=%s"
+        student_count=databaseOperations.select_one(sql,(id))[0]
+        sql="select count(1) from attendance where course_id=%s and chapter=%s"
+        attendCount=databaseOperations.select_one(sql,(id,student_count))[0]
+        if student_count!=attendCount:
+            return redirect("/teacher/stu/attend?id="+str(id)+"&message="+"签到还未完成")
+
+
         #签到完毕，课程的学习进度加一
         sql="""update
  course SET the_newest_chapter=the_newest_chapter+1,rest_class=rest_class-1
@@ -140,19 +152,14 @@ def attend_check_end():
 
         databaseOperations.insert_one(sql, (id))
 
+
+
+
         #老师工资加50
 
         sql="update teacher set salary=salary+50 where id=%s"
         databaseOperations.insert_one(sql, current_user.id)
-        #查询老师工资的最新一条记录
 
-        sql="select teacher_id,rest from salary where teacher_id=%s order by id"
-        row=databaseOperations.select_one(sql,current_user.id)
-        if row==None:
-            row=[current_user.id[0],0]
-        #存入一条老师收入记录
-        sql="insert into salary(teacher_id,date,income_outcome,rest) values(%s,%s,%s,%s)"
-        databaseOperations.insert_one(sql,(current_user.id[0],date.today(),50,row[1]+50))
 
         return redirect("/teacher/course")
 
@@ -215,12 +222,4 @@ def salaryOut():
         #，更新剩余工资
         sql="update teacher set salary=%s where id=%s"
         databaseOperations.insert_one(sql,(float(row[0])-salary,current_user.id))
-        #查询最后一条工资记录
-        sql="select teacher_id,rest from salary where teacher_id=%s order by id"
-        row=databaseOperations.select_one(sql,current_user.id)
-        if row==None:
-            row=[current_user.id[0],0]
-        #加一条工资记录
-        sql="insert into salary(teacher_id,date,income_outcome,rest) values(%s,%s,%s,%s)"
-        databaseOperations.insert_one(sql,(current_user.id[0],date.today(),-salary,float(row[1])-salary))
         return redirect('/teacher/salary')

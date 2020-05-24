@@ -43,8 +43,12 @@ def create_app():
                 user = User(row[0], row[1], row[2])
                 return user
         elif type==3 and 'admin' in request.url:
-            user=User(0,'admin','admin')
-            return user
+            databaseOperations = DatabaseOperations()
+            sql = "select account,password from admin where id=%s"
+            row = databaseOperations.select_one(sql, (userid))
+            if row is not None:
+                user = User(0, row[0], row[1])
+                return user
 
     #注册蓝图
     from .main import mainBlu as main_blueprint

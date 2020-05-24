@@ -36,11 +36,23 @@ def login_views():
     databaseOperations = DatabaseOperations()
     #如果类型为3，则管理员登陆校验
     if int(type)==3:
-        if username=='admin' and password=="admin":
-            user = User(0, 'admin', 'admin')
-            login_user(user)
-            session['user_type']=int(3)
-            return redirect("/admin/index")
+        sql = "select account,password from admin where account=%s"
+
+        row = databaseOperations.select_one(sql, (username))
+        # 如果不存在，则提示
+        if row is None:
+            return render_template('login_interface.html', message="该管理员不存在")
+        else:
+            # 如果存在，则对比密码
+            if row[1] != password:
+                return render_template('login_interface.html', message="登陆密码不正确")
+            else:
+                # 密码正确，则实力化一个user对象，并运用login_user方法进行状态保持
+                user = User(0, row[0], row[1])
+                session['user_type'] = int(type)
+                login_user(user, remeber_me)
+                return redirect("/admin/index")
+
 
         #如果为2，则是教师登陆
     elif int(type)==2:

@@ -20,7 +20,7 @@ def student_home():
         sql = 'select * from student where id=%s'
         student = databaseOperations.select_one(sql, current_user.id)
         #查询学生相关课程信息
-        sql = "select c.id as id,c.name as name from `stud_course` as s left join course as c on c.id=s.course_id where s.student_id=%s";
+        sql = "select c.id as id,c.name as name from `stud_course` as s left join course as c on c.id=s.course_id where s.student_id=%s"
         result = databaseOperations.select_many(sql, current_user.id)
         return render_template('student_page.html', student=student, result=result)
 

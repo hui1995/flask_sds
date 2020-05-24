@@ -31,7 +31,7 @@ def admin_course():
             return render_template('admin_course.html')
         #查询课程信息
         databaseOperation=DatabaseOperations()
-        sql=" SELECT c.id,c.`name`,st.`name`,st.id,ifnull(s.score,''),ifnull(s.GPA,'') FROM stud_course as s LEFT JOIN course as c ON s.course_id=c.id LEFT JOIN student as st ON s.student_id=st.id WHERE c.id=%s"
+        sql=" SELECT c.id,c.`name`,st.`name`,st.id FROM stud_course as s LEFT JOIN course as c ON s.course_id=c.id LEFT JOIN student as st ON s.student_id=st.id WHERE c.id=%s"
         courselst=databaseOperation.select_many(sql,(courseId))
 
         if len(courselst) ==0:
@@ -87,7 +87,7 @@ def admin_course_edit():
     if request.method == 'GET':
         #查询课程某一条学生的信息数据
 
-        sql="""SELECT c.id,c.`name`,st.`name`,st.id,ifnull(s.score,''),ifnull(s.GPA,'') FROM stud_course as s LEFT JOIN course as c ON s.course_id=c.id LEFT JOIN student as st ON s.student_id=st.id WHERE c.id=%s and st.id=%s"""
+        sql="""SELECT c.id,c.`name`,st.`name`,st.id FROM stud_course as s LEFT JOIN course as c ON s.course_id=c.id LEFT JOIN student as st ON s.student_id=st.id WHERE c.id=%s and st.id=%s"""
         databaseOperation=DatabaseOperations()
 
 
@@ -99,8 +99,7 @@ def admin_course_edit():
 
     else:
         courseName = request.form.get("name")
-        score=request.form.get("score")
-        GPA=request.form.get("GPA")
+
         databaseOperation = DatabaseOperations()
         #获取要更改的信息，并用sql更新数据库
 
@@ -108,13 +107,7 @@ def admin_course_edit():
 
             sql="update course set name=%s where id =%s"
             databaseOperation.update(sql,(courseName,courseId))
-        if score is not None or score !="":
-            sql="update stud_course set score=%s where course_id=%s and student_id=%s"
-            databaseOperation.update(sql,(score,courseId,studentId))
 
-        if GPA is not None or GPA != "":
-            sql = "update stud_course set GPA=%s where course_id=%s and student_id=%s"
-            databaseOperation.update(sql, (GPA, courseId, studentId))
         return redirect("/admin/course?courseId="+str(courseId))
 
 #教师页面
@@ -133,18 +126,6 @@ def admin_teacher():
         rows = databaseOperation.select_many(sql, (teacher_id))
         return render_template('admin_teacher.html',teacherlst=rows,teacher_id=teacher_id)
 
-@adminBlue.route('/salary',methods=['POST','GET'])
-@login_required
-def admin_salary():
-    if request.method == 'GET':
-        #查询老师的工资流水
-        teacher_id=request.args.get("teacherId")
-        sql="select * from salary where teacher_id=%s order by id desc"
-        databaseOperation = DatabaseOperations()
-        rows=databaseOperation.select_many(sql,(teacher_id))
-        print(rows)
-        return render_template('salary_teacher.html', rows=rows)
-
 
 
 
@@ -158,7 +139,7 @@ def admin_teacher_delete():
         databaseOperation=DatabaseOperations()
         sql='delete from stud_course where course_id=%s'
         databaseOperation.delete(sql,(id))
-        sql='update course set teacher_id=%s ,teacher_name=%s where id=%s'
+        sql='update course set teacher_id=%s where id=%s'
         databaseOperation.update(sql,(None,None,id))
         return redirect("/admin/teacher?teacherId="+teacherId)
 
@@ -199,11 +180,10 @@ def admin_teacher_add_course():
     #获取前端的课程id，并绑定为该老师教课
     courseId=request.form.getlist("courseId")
     databaseOperation = DatabaseOperations()
-    sql="select name from teacher where  id=%s"
-    row=databaseOperation.select_one(sql,(teacher_id))
-    sql="update course set teacher_id=%s,teacher_name=%s where id=%s"
+
+    sql="update course set teacher_id=%s where id=%s"
     for i in courseId:
-        databaseOperation.update(sql,(teacher_id,row[0],i))
+        databaseOperation.update(sql,(teacher_id,i))
     return redirect("/admin/teacher?teacherId="+teacher_id)
 
 #获取学生相关信息
